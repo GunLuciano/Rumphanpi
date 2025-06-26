@@ -38,6 +38,28 @@
       .xenon-border {
         border: 1px solid rgba(106, 0, 255, 0.3);
       }
+      
+      /* สไตล์สำหรับ modal */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 100;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.7);
+      }
+      
+      .modal-content {
+        background: linear-gradient(135deg, #1a1a2e 0%, #0f0f15 100%);
+        margin: 15% auto;
+        padding: 2rem;
+        border: 1px solid rgba(106, 0, 255, 0.3);
+        border-radius: 12px;
+        width: 80%;
+        max-width: 400px;
+      }
     </style>
   </head>
   <body class="text-white min-h-screen flex flex-col">
@@ -53,12 +75,14 @@
         <a href="บ้าน.html" class="hover:text-purple-300 transition-colors">บ้าน</a>
         <a href="#" class="hover:text-purple-300 transition-colors">ติดต่อ</a>
       </nav>
-      <a href="#" class="text-white px-4 py-2 rounded-full flex items-center gap-2 glow-effect">
+      <!-- ปุ่มล็อกอิน Discord -->
+      <button id="discordLoginBtn" class="text-white px-4 py-2 rounded-full flex items-center gap-2 glow-effect">
         <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" 
              class="h-5 w-5" 
              alt="Discord Icon" />
-        <span class="hidden sm:inline">Discord</span>
-      </a>
+        <span class="hidden sm:inline">ล็อกอินด้วย Discord</span>
+        <span class="sm:hidden">ล็อกอิน</span>
+      </button>
     </header>
 
     <!-- Hero Section -->
@@ -98,11 +122,108 @@
       </div>
     </footer>
 
+    <!-- Modal สำหรับล็อกอิน -->
+    <div id="loginModal" class="modal">
+      <div class="modal-content">
+        <span class="close" style="float: right; cursor: pointer;">&times;</span>
+        <h2 class="text-2xl font-bold mb-4 xenon-text">ล็อกอินด้วย Discord</h2>
+        <p class="mb-4">กรุณากดปุ่มด้านล่างเพื่อล็อกอินผ่าน Discord</p>
+        <a href="https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code&scope=identify%20email" 
+           class="discord-btn text-white px-4 py-2 rounded-full flex items-center justify-center gap-2 glow-effect">
+          <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" 
+               class="h-5 w-5" 
+               alt="Discord Icon" />
+          ล็อกอินด้วย Discord
+        </a>
+      </div>
+    </div>
+
     <!-- เอฟเฟกต์พื้นหลังแบบ Xenon Hub -->
     <div class="fixed inset-0 -z-10 overflow-hidden">
       <div class="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-purple-900 opacity-20 blur-3xl animate-pulse"></div>
       <div class="absolute top-1/2 right-1/3 w-48 h-48 rounded-full bg-blue-900 opacity-20 blur-3xl animate-pulse delay-300"></div>
       <div class="absolute bottom-1/4 right-1/4 w-40 h-40 rounded-full bg-indigo-900 opacity-20 blur-3xl animate-pulse delay-700"></div>
     </div>
+
+    <script>
+      // เปิด Modal ล็อกอิน
+      const loginBtn = document.getElementById('discordLoginBtn');
+      const modal = document.getElementById('loginModal');
+      const span = document.getElementsByClassName('close')[0];
+      
+      loginBtn.onclick = function() {
+        modal.style.display = 'block';
+      }
+      
+      span.onclick = function() {
+        modal.style.display = 'none';
+      }
+      
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = 'none';
+        }
+      }
+      
+      // ตรวจสอบการล็อกอินเมื่อโหลดหน้า
+      document.addEventListener('DOMContentLoaded', function() {
+        // ตรวจสอบว่ามี token ใน localStorage หรือไม่
+        const userToken = localStorage.getItem('discordToken');
+        
+        if(userToken) {
+          // ถ้ามี token ให้ดึงข้อมูลผู้ใช้
+          fetch('/api/user', {
+            headers: {
+              'Authorization': `Bearer ${userToken}`
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            // แสดงข้อมูลผู้ใช้
+            console.log('ผู้ใช้ล็อกอินแล้ว:', data);
+            updateUIForLoggedInUser(data);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            localStorage.removeItem('discordToken');
+          });
+        }
+      });
+      
+      // ฟังก์ชันอัพเดท UI เมื่อล็อกอิน
+      function updateUIForLoggedInUser(user) {
+        const loginBtn = document.getElementById('discordLoginBtn');
+        loginBtn.innerHTML = `
+          <img class="w-6 h-6 rounded-full" src="https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png" alt="User Avatar" />
+          <span>${user.username}</span>
+        `;
+      }
+      
+      // ตรวจสอบ URL สำหรับ code จาก Discord
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      
+      if(code) {
+        // ส่ง code ไปยังเซิร์ฟเวอร์เพื่อรับ token
+        fetch('/auth/discord/callback', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ code: code }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if(data.token) {
+            // บันทึก token และรีเฟรชหน้า
+            localStorage.setItem('discordToken', data.token);
+            window.location.href = window.location.pathname;
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      }
+    </script>
   </body>
 </html>
