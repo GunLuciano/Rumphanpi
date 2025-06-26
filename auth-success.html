@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ล็อกอินสำเร็จ</title>
+  <script>
+    const user = JSON.parse(decodeURIComponent(new URLSearchParams(window.location.search).get('user')));
+    localStorage.setItem('discordUser', JSON.stringify(user));
+    window.location.href = '/';
+  </script>
+</head>
+<body>
+  กำลังนำคุณกลับไปหน้าหลัก...
+</body>
+</html>

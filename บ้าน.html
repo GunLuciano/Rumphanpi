@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RUMPHANPI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .event-card {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        border: 1px solid #333;
+      }
+      .progress-bar {
+        background: linear-gradient(90deg, #4f46e5 0%, #10b981 100%);
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 100;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.8);
+      }
+      .modal-content {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        margin: 10% auto;
+        padding: 20px;
+        border: 1px solid #4f46e5;
+        width: 80%;
+        max-width: 500px;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body class="bg-black text-white min-h-screen">
+    <!-- Header -->
+    <header class="flex justify-between items-center px-8 py-4 border-b border-gray-800">
+      <a href="index.html" class="flex items-center space-x-2 hover:opacity-80">
+        <img src="imv/R1.png" class="h-6" alt="RUMPHANPI LOGO" />
+        <span class="text-lg font-bold">RUMPHANPI</span>
+      </a>
+      <nav class="hidden md:flex space-x-8 text-sm">
+        <a href="index.html" class="hover:text-gray-400">หน้าหลัก</a>
+        <a href="#" class="hover:text-gray-400">เช็คของ</a>
+        <a href="บ้าน.html" class="hover:text-gray-400">บ้าน</a>
+        <a href="#" class="hover:text-gray-400">ติดต่อ</a>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+      <!-- System Section -->
+      <section class="mb-12">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold">ระบบสุ่มบ้าน</h2>
+          <div class="flex space-x-2">
+            <button class="px-4 py-2 bg-purple-600 rounded-lg hover:bg-purple-700 text-sm">ทั้งหมด</button>
+            <button class="px-4 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 text-sm">กำลังดำเนินการ</button>
+            <button class="px-4 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 text-sm">เสร็จสิ้น</button>
+          </div>
+        </div>
+
+        <!-- Sales Summary -->
+        <div class="event-card rounded-xl p-6 mb-8">
+          <h3 class="text-lg font-semibold mb-4 text-purple-400">สุ่มบ้าน</h3>
+          <div class="flex justify-between">
+          </div>
+
+        <!-- ปุ่มซื้อ -->
+        <button id="randomHomeBtn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300">
+          สุ่มบ้าน
+        </button>
+        <div id="resultMessage" class="mt-4 text-purple-300 hidden"></div>
+        </div>
+
+        <!-- Events Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Event 1 -->
+          <div class="event-card rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h3 class="font-bold text-lg">Home1</h3>
+                <p class="text-sm text-gray-400">$TWZHEN</p>
+              </div>
+              <span class="bg-purple-600 text-xs px-2 py-1 rounded">H1</span>
+            </div>
+            
+            <div class="mb-4">
+              <div class="flex justify-between text-sm mb-2">
+                <span class="text-gray-400">จำนวนคน</span>
+              </div>
+              
+              <div class="w-full bg-gray-700 rounded-full h-2 mb-1">
+                <div id="home1Progress" class="progress-bar h-2 rounded-full" style="width: 0%"></div>
+              </div>
+              <div class="flex justify-between text-xs text-gray-400">
+                <span>รวม</span>
+                <span id="home1Count">0 / 5</span>
+              </div>
+            </div>
+            
+            <button onclick="showMembers('home1')" class="w-full py-2 bg-purple-600 rounded-lg hover:bg-purple-700 mt-4">คลิกเพื่อดู</button>
+          </div>
+
+          <!-- Event 2 -->
+          <div class="event-card rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h3 class="font-bold text-lg">Home2</h3>
+                <p class="text-sm text-gray-400">vibuquest</p>
+              </div>
+              <span class="bg-blue-600 text-xs px-2 py-1 rounded">H2</span>
+            </div>
+            
+            <div class="mb-4">
+              <div class="flex justify-between text-sm mb-1">
+              </div>
+              <div class="flex justify-between text-sm mb-2">
+                <span class="text-gray-400">เพิ่มมูลค่า</span>
+              </div>
+              
+              <div class="w-full bg-gray-700 rounded-full h-2 mb-1">
+                <div id="home2Progress" class="progress-bar h-2 rounded-full" style="width: 0%"></div>
+              </div>
+              <div class="flex justify-between text-xs text-gray-400">
+                <span>รวม</span>
+                <span id="home2Count">0 / 5</span>
+              </div>
+            </div>
+            
+            <button onclick="showMembers('home2')" class="w-full py-2 bg-blue-600 rounded-lg hover:bg-blue-700 mt-4">คลิกเพื่อดู</button>
+          </div>
+
+          <!-- Event 3 -->
+          <div class="event-card rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h3 class="font-bold text-lg">Home3</h3>
+                <p class="text-sm text-gray-400">$TWZHEN</p>
+              </div>
+              <span class="bg-green-600 text-xs px-2 py-1 rounded">H3</span>
+            </div>
+            
+            <div class="mb-4">
+              <div class="flex justify-between text-sm mb-1">
+              </div>
+              <div class="flex justify-between text-sm mb-2">
+                <span class="text-gray-400">จำนวนคน</span>
+              </div>
+              
+              <div class="w-full bg-gray-700 rounded-full h-2 mb-1">
+                <div id="home3Progress" class="progress-bar h-2 rounded-full" style="width: 0%"></div>
+              </div>
+              <div class="flex justify-between text-xs text-gray-400">
+                <span>รวม</span>
+                <span id="home3Count">0 / 5</span>
+              </div>
+            </div>
+            
+            <button onclick="showMembers('home3')" class="w-full py-2 bg-green-600 rounded-lg hover:bg-green-700 mt-4">คลิกเพื่อดู</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Member List Modal -->
+    <div id="memberModal" class="modal">
+      <div class="modal-content">
+        <div class="flex justify-between items-center mb-4">
+          <h3 id="modalTitle" class="text-xl font-bold text-purple-400"></h3>
+          <span onclick="closeModal()" class="cursor-pointer text-2xl">&times;</span>
+        </div>
+        <div class="mb-4">
+          <p id="homeOwner" class="text-gray-400 mb-2"></p>
+          <p id="homeCount" class="text-gray-400 mb-4"></p>
+        </div>
+        <div class="border-t border-gray-700 pt-4">
+          <h4 class="font-semibold mb-2">รายชื่อสมาชิก:</h4>
+          <ul id="memberList" class="space-y-2">
+            <!-- Member list will be inserted here -->
+          </ul>
+        </div>
+        <button onclick="closeModal()" class="mt-6 w-full py-2 bg-gray-700 hover:bg-gray-600 rounded-lg">ปิด</button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 py-8 px-8">
+      <div class="container mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div class="mb-4 md:mb-0">
+            <a href="#" class="flex items-center space-x-2">
+              <img src="imv/R1.png" class="h-6" alt="RUMPHANPI LOGO" />
+              <span class="text-lg font-bold">RUMPHANPI</span>
+            </a>
+            <p class="text-gray-400 text-sm mt-2">© 2025 RUMPHANPI. All rights reserved.</p>
+          </div>
+          <div class="flex space-x-6">
+            <a href="#" class="text-gray-400 hover:text-white">Terms</a>
+            <a href="#" class="text-gray-400 hover:text-white">Privacy</a>
+            <a href="#" class="text-gray-400 hover:text-white">Contact</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Initialize home data with owner as first member
+      const homes = {
+        home1: { 
+          count: 1, 
+          max: 5, 
+          name: "Home1", 
+          owner: "$TWZHEN",
+          members: ["$TWZHEN (เจ้าของบ้าน)"],
+          joinedMembers: new Set(["$TWZHEN"])
+        },
+        home2: { 
+          count: 1, 
+          max: 5, 
+          name: "Home2", 
+          owner: "vibuquest",
+          members: ["vibuquest (เจ้าของบ้าน)"],
+          joinedMembers: new Set(["vibuquest"])
+        },
+        home3: { 
+          count: 1, 
+          max: 5, 
+          name: "Home3", 
+          owner: "$TWZHEN",
+          members: ["$TWZHEN (เจ้าของบ้าน)"],
+          joinedMembers: new Set(["$TWZHEN"])
+        }
+      };
+
+      // Sample Discord members - REPLACE THIS WITH ACTUAL DISCORD API CALL
+      // This is just for demonstration
+      const discordMembers = [
+        { id: "1", username: "user1", displayName: "สมชาย" },
+        { id: "2", username: "user2", displayName: "สุนิตา" },
+        { id: "3", username: "user3", displayName: "ประเสริฐ" },
+        { id: "4", username: "user4", displayName: "วรรณา" },
+        { id: "5", username: "user5", displayName: "ธนวัฒน์" },
+        { id: "6", username: "user6", displayName: "กัลยา" },
+        { id: "7", username: "user7", displayName: "วีระ" },
+        { id: "8", username: "user8", displayName: "พรทิพย์" },
+        { id: "9", username: "user9", displayName: "อนุชา" },
+        { id: "10", username: "user10", displayName: "รัตนา" }
+      ];
+
+      // Track all members who have joined any home
+      const allJoinedMembers = new Set([...homes.home1.joinedMembers, ...homes.home2.joinedMembers, ...homes.home3.joinedMembers]);
+
+      // Get DOM elements
+      const randomHomeBtn = document.getElementById('randomHomeBtn');
+      const resultMessage = document.getElementById('resultMessage');
+      const memberModal = document.getElementById('memberModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const homeOwner = document.getElementById('homeOwner');
+      const homeCount = document.getElementById('homeCount');
+      const memberList = document.getElementById('memberList');
+      
+      // Function to update home display
+      function updateHomeDisplay() {
+        // Update Home1
+        document.getElementById('home1Count').textContent = `${homes.home1.count} / ${homes.home1.max}`;
+        document.getElementById('home1Progress').style.width = `${(homes.home1.count / homes.home1.max) * 100}%`;
+        
+        // Update Home2
+        document.getElementById('home2Count').textContent = `${homes.home2.count} / ${homes.home2.max}`;
+        document.getElementById('home2Progress').style.width = `${(homes.home2.count / homes.home2.max) * 100}%`;
+        
+        // Update Home3
+        document.getElementById('home3Count').textContent = `${homes.home3.count} / ${homes.home3.max}`;
+        document.getElementById('home3Progress').style.width = `${(homes.home3.count / homes.home3.max) * 100}%`;
+      }
+
+      // Function to show members in modal
+      function showMembers(homeKey) {
+        const home = homes[homeKey];
+        
+        // Set modal content
+        modalTitle.textContent = home.name;
+        homeOwner.textContent = `เจ้าของบ้าน: ${home.owner}`;
+        homeCount.textContent = `จำนวนสมาชิก: ${home.count}/${home.max}`;
+        
+        // Clear and populate member list
+        memberList.innerHTML = '';
+        home.members.forEach(member => {
+          const li = document.createElement('li');
+          li.className = 'flex items-center';
+          li.innerHTML = `
+            <span class="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+            <span>${member}</span>
+          `;
+          memberList.appendChild(li);
+        });
+        
+        // Show modal
+        memberModal.style.display = 'block';
+      }
+
+      // Function to close modal
+      function closeModal() {
+        memberModal.style.display = 'none';
+      }
+
+      // Function to get available Discord members who haven't joined any home
+      function getAvailableDiscordMembers() {
+        return discordMembers.filter(member => 
+          !allJoinedMembers.has(member.id) && 
+          !allJoinedMembers.has(member.username) && 
+          !allJoinedMembers.has(member.displayName)
+        );
+      }
+
+      // Function to randomly assign to a home
+      function assignRandomHome() {
+        // Check if all homes are full
+        const allFull = Object.values(homes).every(home => home.count >= home.max);
+        if (allFull) {
+          resultMessage.textContent = "บ้านทั้งหมดเต็มแล้ว!";
+          resultMessage.classList.remove('hidden');
+          return;
+        }
+        
+        // Get available members from Discord
+        const availableMembers = getAvailableDiscordMembers();
+        if (availableMembers.length === 0) {
+          resultMessage.textContent = "ไม่มีสมาชิกจากดิสคอร์ดเหลือแล้ว!";
+          resultMessage.classList.remove('hidden');
+          return;
+        }
+        
+        // Get available homes (not full)
+        const availableHomes = Object.entries(homes).filter(([_, home]) => home.count < home.max);
+        
+        // Randomly select a home and a member
+        const homeIndex = Math.floor(Math.random() * availableHomes.length);
+        const memberIndex = Math.floor(Math.random() * availableMembers.length);
+        
+        const [homeKey, home] = availableHomes[homeIndex];
+        const member = availableMembers[memberIndex];
+        const memberDisplayName = member.displayName || member.username;
+        
+        // Assign to the home
+        home.count++;
+        home.members.push(memberDisplayName);
+        home.joinedMembers.add(member.id);
+        home.joinedMembers.add(member.username);
+        home.joinedMembers.add(member.displayName);
+        
+        // Track in global joined members
+        allJoinedMembers.add(member.id);
+        allJoinedMembers.add(member.username);
+        allJoinedMembers.add(member.displayName);
+        
+        // Update display
+        updateHomeDisplay();
+        
+        // Show result message
+        resultMessage.textContent = `สมาชิก ${memberDisplayName} ถูกสุ่มเข้าสู่ ${home.name}`;
+        resultMessage.classList.remove('hidden');
+        
+        // Hide message after 3 seconds
+        setTimeout(() => {
+          resultMessage.classList.add('hidden');
+        }, 3000);
+      }
+
+      // Event listener for random home button
+      randomHomeBtn.addEventListener('click', assignRandomHome);
+
+      // Close modal when clicking outside
+      window.addEventListener('click', (event) => {
+        if (event.target === memberModal) {
+          closeModal();
+        }
+      });
+
+      // Initialize display
+      updateHomeDisplay();
+
+      // In a real implementation, you would connect to Discord API here
+      // For example:
+      /*
+      async function fetchDiscordMembers() {
+        try {
+          const response = await fetch('YOUR_DISCORD_API_ENDPOINT');
+          const data = await response.json();
+          discordMembers = data.members; // Adjust according to your API response
+        } catch (error) {
+          console.error('Error fetching Discord members:', error);
+        }
+      }
+      fetchDiscordMembers();
+      */
+    </script>
+  </body>
+</html>
