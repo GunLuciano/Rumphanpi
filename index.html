@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RUMPHANPI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&display=swap');
+      
+      body {
+        font-family: 'Kanit', sans-serif;
+        background: linear-gradient(135deg, #0f0f15 0%, #1a1a2e 100%);
+      }
+      
+      .xenon-text {
+        background: linear-gradient(90deg, #00d4ff 0%, #6a00ff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 10px rgba(106, 0, 255, 0.3);
+      }
+      
+      .glow-effect {
+        box-shadow: 0 0 15px rgba(106, 0, 255, 0.5);
+      }
+      
+      .main-btn {
+        background: linear-gradient(90deg, #6a00ff 0%, #00d4ff 100%);
+        transition: all 0.3s ease;
+        font-size: 1.25rem;
+        padding: 1rem 2rem;
+      }
+      .main-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(106, 0, 255, 0.4);
+      }
+      
+      .xenon-border {
+        border: 1px solid rgba(106, 0, 255, 0.3);
+      }
+    </style>
+  </head>
+  <body class="text-white min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="flex justify-between items-center px-8 py-4 xenon-border border-b">
+      <a href="index.html" class="flex items-center space-x-2 hover:opacity-80">
+        <img src="imv/R1.png" class="h-6" alt="RUMPHANPI LOGO" />
+        <span class="text-lg font-bold xenon-text">RUMPHANPI</span>
+      </a>
+      <nav class="hidden md:flex space-x-8 text-sm">
+        <a href="#" class="hover:text-purple-300 transition-colors">หน้าหลัก</a>
+        <a href="#" class="hover:text-purple-300 transition-colors">เช็คของ</a>
+        <a href="บ้าน.html" class="hover:text-purple-300 transition-colors">บ้าน</a>
+        <a href="#" class="hover:text-purple-300 transition-colors">ติดต่อ</a>
+      </nav>
+      <a href="#" class="text-white px-4 py-2 rounded-full flex items-center gap-2 glow-effect">
+        <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" 
+             class="h-5 w-5" 
+             alt="Discord Icon" />
+        <span class="hidden sm:inline">Discord</span>
+      </a>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="flex-grow flex flex-col items-center justify-center px-6 py-12 text-center">
+      <div class="mb-8 max-w-2xl w-full">
+        <h1 class="text-6xl md:text-7xl font-bold mb-6 xenon-text">
+          RUMPHANPI
+        </h1>
+        <p class="text-xl md:text-2xl mb-8 text-gray-300">
+          ชุมชนสำหรับผู้ชื่นชอบ NFT และเทคโนโลยีบล็อกเชน
+        </p>
+        
+        <!-- Avatar Stack -->
+        <div class="mb-8">
+          <div class="flex justify-center -space-x-3 mb-3">
+            <img class="w-12 h-12 rounded-full border-2 border-purple-500" src="https://i.imgur.com/1.jpg" alt="User 1" />
+            <img class="w-12 h-12 rounded-full border-2 border-purple-500" src="https://i.imgur.com/2.jpg" alt="User 2" />
+            <img class="w-12 h-12 rounded-full border-2 border-purple-500" src="https://i.imgur.com/3.jpg" alt="User 3" />
+            <img class="w-12 h-12 rounded-full border-2 border-purple-500" src="https://i.imgur.com/4.jpg" alt="User 4" />
+          </div>
+          <p class="text-gray-400 text-sm">สมาชิกมากกว่า 1,000 คนแล้ว!</p>
+        </div>
+
+        <!-- ปุ่มเริ่มต้น (อยู่กึ่งกลางและใหญ่ขึ้น) -->
+        <div class="flex justify-center mt-8">
+          <a href="#" class="main-btn text-white rounded-full font-semibold glow-effect">
+            เริ่มต้นเลย!
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="xenon-border border-t py-8 px-8 text-center">
+      <div class="container mx-auto">
+        <p class="text-gray-400 text-sm">© 2025 RUMPHANPI. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- เอฟเฟกต์พื้นหลังแบบ Xenon Hub -->
+    <div class="fixed inset-0 -z-10 overflow-hidden">
+      <div class="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-purple-900 opacity-20 blur-3xl animate-pulse"></div>
+      <div class="absolute top-1/2 right-1/3 w-48 h-48 rounded-full bg-blue-900 opacity-20 blur-3xl animate-pulse delay-300"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-40 h-40 rounded-full bg-indigo-900 opacity-20 blur-3xl animate-pulse delay-700"></div>
+    </div>
+  </body>
+</html>
