@@ -60,6 +60,17 @@
         width: 80%;
         max-width: 400px;
       }
+      
+      .discord-btn {
+        background: #5865F2;
+        padding: 12px 24px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+      }
+      .discord-btn:hover {
+        background: #4752c4;
+        transform: translateY(-2px);
+      }
     </style>
   </head>
   <body class="text-white min-h-screen flex flex-col">
@@ -125,11 +136,11 @@
     <!-- Modal สำหรับล็อกอิน -->
     <div id="loginModal" class="modal">
       <div class="modal-content">
-        <span class="close" style="float: right; cursor: pointer;">&times;</span>
+        <span class="close" style="float: right; cursor: pointer; font-size: 1.5rem;">&times;</span>
         <h2 class="text-2xl font-bold mb-4 xenon-text">ล็อกอินด้วย Discord</h2>
-        <p class="mb-4">กรุณากดปุ่มด้านล่างเพื่อล็อกอินผ่าน Discord</p>
-        <a href="https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code&scope=identify%20email" 
-           class="discord-btn text-white px-4 py-2 rounded-full flex items-center justify-center gap-2 glow-effect">
+        <p class="mb-6 text-gray-300">ล็อกอินเพื่อเข้าถึงฟีเจอร์พิเศษทั้งหมด</p>
+        <a id="discordAuthLink" href="#" 
+           class="discord-btn text-white rounded-full flex items-center justify-center gap-2 glow-effect">
           <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" 
                class="h-5 w-5" 
                alt="Discord Icon" />
@@ -146,10 +157,25 @@
     </div>
 
     <script>
+      // ตั้งค่าคอนฟิก Discord OAuth2
+      const discordConfig = {
+        clientId: '1387844630812561489', // เปลี่ยนเป็น Client ID ของคุณ
+        redirectUri: encodeURIComponent('http://localhost:8000/auth/discord/callback'), // ต้องตรงกับที่ตั้งใน Discord Developer Portal
+        scope: encodeURIComponent('identify email'), // ขอข้อมูลพื้นฐานและอีเมล
+        responseType: 'code' // ใช้ OAuth2 code flow
+      };
+      
+      // สร้างลิงก์ล็อกอิน Discord
+      const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${discordConfig.clientId}&redirect_uri=${discordConfig.redirectUri}&response_type=${discordConfig.responseType}&scope=${discordConfig.scope}`;
+      
       // เปิด Modal ล็อกอิน
       const loginBtn = document.getElementById('discordLoginBtn');
       const modal = document.getElementById('loginModal');
       const span = document.getElementsByClassName('close')[0];
+      const discordAuthLink = document.getElementById('discordAuthLink');
+      
+      // ตั้งค่าลิงก์ล็อกอิน
+      discordAuthLink.href = discordAuthUrl;
       
       loginBtn.onclick = function() {
         modal.style.display = 'block';
@@ -167,62 +193,84 @@
       
       // ตรวจสอบการล็อกอินเมื่อโหลดหน้า
       document.addEventListener('DOMContentLoaded', function() {
-        // ตรวจสอบว่ามี token ใน localStorage หรือไม่
-        const userToken = localStorage.getItem('discordToken');
+        checkLoginStatus();
         
-        if(userToken) {
-          // ถ้ามี token ให้ดึงข้อมูลผู้ใช้
-          fetch('/api/user', {
-            headers: {
-              'Authorization': `Bearer ${userToken}`
-            }
-          })
-          .then(response => response.json())
-          .then(data => {
-            // แสดงข้อมูลผู้ใช้
-            console.log('ผู้ใช้ล็อกอินแล้ว:', data);
-            updateUIForLoggedInUser(data);
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            localStorage.removeItem('discordToken');
-          });
+        // ตรวจสอบ URL สำหรับ code จาก Discord
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        
+        if(code) {
+          // แสดงสถานะกำลังล็อกอิน
+          loginBtn.innerHTML = `
+            <span class="animate-pulse">กำลังล็อกอิน...</span>
+          `;
+          
+          // ส่ง code ไปยังเซิร์ฟเวอร์ (ตัวอย่างเท่านั้น - ต้องมีเซิร์ฟเวอร์จริง)
+          // ในที่นี้เราจะจำลองการทำงานด้วย localStorage
+          simulateLoginWithCode(code);
         }
       });
+      
+      // ฟังก์ชันจำลองการล็อกอิน (สำหรับทดสอบเท่านั้น)
+      function simulateLoginWithCode(code) {
+        console.log('รับ code จาก Discord:', code);
+        
+        // ในสภาพแวดล้อมจริง คุณต้องส่ง code นี้ไปยังเซิร์ฟเวอร์ของคุณ
+        // เพื่อแลกเป็น access token
+        
+        // จำลองการตอบกลับจากเซิร์ฟเวอร์
+        setTimeout(() => {
+          // สร้างข้อมูลผู้ใช้ตัวอย่าง
+          const mockUser = {
+            id: '123456789',
+            username: 'RumphanpiUser',
+            avatar: 'a_abc123',
+            email: 'user@example.com',
+            discriminator: '1234'
+          };
+          
+          // บันทึกข้อมูลผู้ใช้ใน localStorage (ในสภาพแวดล้อมจริงควรใช้วิธีที่ปลอดภัยกว่านี้)
+          localStorage.setItem('discordUser', JSON.stringify(mockUser));
+          
+          // ลบ code จาก URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+          
+          // อัพเดท UI
+          checkLoginStatus();
+        }, 1500);
+      }
+      
+      // ตรวจสอบสถานะการล็อกอิน
+      function checkLoginStatus() {
+        const userData = localStorage.getItem('discordUser');
+        
+        if(userData) {
+          const user = JSON.parse(userData);
+          updateUIForLoggedInUser(user);
+        }
+      }
       
       // ฟังก์ชันอัพเดท UI เมื่อล็อกอิน
       function updateUIForLoggedInUser(user) {
         const loginBtn = document.getElementById('discordLoginBtn');
+        
+        // สร้าง URL avatar
+        const avatarUrl = user.avatar 
+          ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+          : `https://cdn.discordapp.com/embed/avatars/${user.discriminator % 5}.png`;
+        
         loginBtn.innerHTML = `
-          <img class="w-6 h-6 rounded-full" src="https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png" alt="User Avatar" />
+          <img class="w-6 h-6 rounded-full" src="${avatarUrl}" alt="User Avatar" />
           <span>${user.username}</span>
         `;
-      }
-      
-      // ตรวจสอบ URL สำหรับ code จาก Discord
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get('code');
-      
-      if(code) {
-        // ส่ง code ไปยังเซิร์ฟเวอร์เพื่อรับ token
-        fetch('/auth/discord/callback', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ code: code }),
-        })
-        .then(response => response.json())
-        .then(data => {
-          if(data.token) {
-            // บันทึก token และรีเฟรชหน้า
-            localStorage.setItem('discordToken', data.token);
-            window.location.href = window.location.pathname;
+        
+        // เพิ่มปุ่มออกจากระบบ
+        loginBtn.onclick = function() {
+          if(confirm('คุณต้องการออกจากระบบหรือไม่?')) {
+            localStorage.removeItem('discordUser');
+            window.location.reload();
           }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
+        };
       }
     </script>
   </body>
